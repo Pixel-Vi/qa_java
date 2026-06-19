@@ -1,37 +1,41 @@
-import com.example.Animal;
 import com.example.Lion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-
-import java.util.List;
-
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LionTest {
-    @Mock
-    private Animal animal;
 
     @Test
     public void testGetKittens() throws Exception{
-        Lion lion = new Lion("Самец", animal);
-        when(animal.getKittens()).thenReturn(1);
+        Lion lion = new Lion("Самец", new com.example.Feline());
         assertEquals("Некорректное количество котят",1, lion.getKittens());
     }
 
     @Test
     public void testGetFood() throws Exception {
-        Lion lion = new Lion("Самка", animal);
-        when(animal.getFood("Хищник")).thenReturn(List.of("Животные", "Птицы", "Рыба"));
-        assertEquals("Вернулся некорректный список еды", List.of("Животные", "Птицы", "Рыба"), lion.getFood());
+        Lion lion = new Lion("Самка", new com.example.Feline());
+        assertEquals("Вернулся некорректный список еды", "Кошачьи", lion.getFamily());
     }
 
-    @Test(expected = Exception.class)
+    @Test
+    public void testDoesHaveMane() throws Exception{
+        Lion lion1 = new Lion("Самец", new com.example.Feline());
+        assertTrue("У самца должна быть грива", lion1.doesHaveMane());
+
+        Lion lion2 = new Lion("Самка", new com.example.Feline());
+        assertFalse("У самки не должно быть гривы", lion2.doesHaveMane());
+    }
+
+    @Test
     public void testInvalidSex() throws Exception {
-        new Lion("Неизвестный пол", new Animal());
+        try {
+            new Lion("Неизвестный пол", new com.example.Feline());
+            fail("Ожидалось исключение");
+        } catch (Exception e) {
+            assertEquals("Используйте допустимые значения пола животного - самец или самка", e.getMessage());
+        }
     }
 }
